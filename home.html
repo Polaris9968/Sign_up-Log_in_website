@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星尘空间 · 个人主页</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow: hidden; /* 防止出现滚动条 */
+        }
+
+        /* 延续登录页的玻璃卡片风格 */
+        .home-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2rem;
+            padding: 3rem;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+
+        h1 { font-size: 2.2rem; margin-bottom: 0.5rem; background: linear-gradient(to right, #fff, #94a3b8); background-clip: text;-webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: #94a3b8; margin-bottom: 2rem; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .info-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; margin-bottom: 0.3rem; }
+        .info-value { font-weight: 600; color: #e2e8f0; }
+
+        .logout-btn {
+            background: rgba(248, 113, 113, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            padding: 0.8rem 2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover { background: #f87171; color: white; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="home-card">
+    <div class="avatar"><i class="fas fa-user-astronaut"></i></div>
+    <h1 id="welcomeTitle">加载中...</h1>
+    <p>欢迎回到你的星尘控制台</p>
+
+    <div class="info-grid">
+        <div class="info-item">
+            <div class="info-label">用户账号</div>
+            <div class="info-value" id="userEmail">---</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">当前状态</div>
+            <div class="info-value" style="color: #4ade80;">● 在线</div>
+        </div>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> 退出登录
+    </button>
+</div>
+
+<script>
+    // 页面加载时检查登录状态
+    window.onload = function() {
+        const userData = sessionStorage.getItem('starspace_current_user');
+        
+        if (!userData) {
+            // 如果没登录，直接踢回登录页
+            alert("请先登录！");
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const user = JSON.parse(userData);
+        document.getElementById('welcomeTitle').textContent = `你好，${user.username || '探索者'}`;
+        document.getElementById('userEmail').textContent = user.email;
+    };
+
+    // 退出功能
+    function logout() {
+        sessionStorage.removeItem('starspace_current_user');
+        // 如果你之前用了 localStorage 的记住我，也要在这里清理掉
+        localStorage.removeItem('starspace_remember_token');
+        window.location.href = 'index.html';
+    }
+</script>
+
+</body>
+</html>

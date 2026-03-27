@@ -518,6 +518,12 @@
                 // 可选跳转或改变界面显示 (简单演示，更新卡片氛围)
                 updateUIAfterAuth(true);
                 // 清空输入框敏感信息? 不清空也无伤大雅
+                // --- 新增跳转逻辑 ---
+                console.log("即将跳转...");
+                setTimeout(() => {
+                    // 这里换成你想要跳转的地址
+                    window.location.href = 'home.html'; 
+                }, 2000);
             } else {
                 showMessage(result.message, 'error');
             }
