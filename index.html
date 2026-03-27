@@ -1,2 +1,685 @@
-111
-222
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>流光溢彩 · 注册登录中心</title>
+    <!-- 引入 Google Fonts 提升现代感 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (免费图标库) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 动态粒子背景 (装饰) */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle at 30% 40%, rgba(56, 189, 248, 0.08) 0%, rgba(139, 92, 246, 0.05) 60%);
+            animation: rotateBg 30s infinite linear;
+            z-index: 0;
+        }
+
+        @keyframes rotateBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 主卡片容器 */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(14px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem 2rem 2.5rem;
+            transition: all 0.3s ease;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* 品牌区 */
+        .brand {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+        .brand-icon {
+            background: linear-gradient(120deg, #38bdf8, #8b5cf6);
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.4);
+        }
+        .brand-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+        .brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f0f9ff, #c4b5fd);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+        .brand p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 0.5rem;
+        }
+
+        /* 选项卡切换 */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.4rem;
+            border-radius: 3rem;
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            flex: 1;
+            text-align: center;
+            padding: 0.7rem 0;
+            font-weight: 600;
+            border-radius: 2rem;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            font-size: 1rem;
+            transition: all 0.25s;
+            backdrop-filter: blur(4px);
+        }
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+        }
+        .tab-btn:first-child.active {
+            background: linear-gradient(95deg, #3b82f6, #8b5cf6);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+        }
+        .tab-btn:last-child.active {
+            background: linear-gradient(95deg, #8b5cf6, #ec489a);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139,92,246,0.3);
+        }
+
+        /* 表单容器 */
+        .form-container {
+            transition: all 0.2s;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .hidden-form {
+            display: none;
+        }
+
+        /* 输入框组 */
+        .input-group {
+            position: relative;
+        }
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+        .input-group input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            font-size: 0.95rem;
+            color: white;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .input-group input:focus {
+            border-color: #8b5cf6;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+        }
+        .input-group input::placeholder {
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        /* 额外选项 (登录页面 记住我/忘记密码) */
+        .row-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #cbd5e6;
+            margin-top: 0.2rem;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+        }
+        .checkbox-label input {
+            accent-color: #8b5cf6;
+            width: 1rem;
+            height: 1rem;
+        }
+        .forgot-link {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .forgot-link:hover {
+            color: #c4b5fd;
+            text-decoration: underline;
+        }
+
+        /* 主要按钮 */
+        .action-btn {
+            background: linear-gradient(105deg, #3b82f6, #a855f7);
+            border: none;
+            border-radius: 2.5rem;
+            padding: 0.9rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -10px rgba(139, 92, 246, 0.5);
+        }
+        .action-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* 消息提示 */
+        .message-area {
+            margin-top: 1.2rem;
+            padding: 0.6rem;
+            border-radius: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            color: #facc15;
+        }
+        .message-area.success {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.12);
+        }
+        .message-area.error {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.12);
+        }
+
+        /* 模拟用户提示条 (小彩蛋) */
+        .demo-hint {
+            margin-top: 1.8rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 1rem;
+        }
+        .demo-hint span {
+            background: rgba(0,0,0,0.4);
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            font-family: monospace;
+        }
+
+        @media (max-width: 500px) {
+            .glass-card {
+                padding: 1.5rem;
+            }
+            .brand h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-card">
+    <div class="brand">
+        <div class="brand-icon">
+            <i class="fas fa-cloud-moon"></i>
+        </div>
+        <h1>星尘空间</h1>
+        <p>探索 · 连接 · 未来</p>
+    </div>
+
+    <!-- 选项卡 登录/注册 -->
+    <div class="tabs">
+        <button class="tab-btn active" id="tabLoginBtn"><i class="fas fa-sign-in-alt" style="margin-right: 6px;"></i> 登录</button>
+        <button class="tab-btn" id="tabRegBtn"><i class="fas fa-user-plus" style="margin-right: 6px;"></i> 注册</button>
+    </div>
+
+    <div class="form-container">
+        <!-- 登录表单 -->
+        <div id="loginForm" class="auth-form">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="loginEmail" placeholder="电子邮箱" autocomplete="email">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPassword" placeholder="密码" autocomplete="current-password">
+            </div>
+            <div class="row-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="rememberMe"> <span>记住我</span>
+                </label>
+                <a href="#" class="forgot-link" id="forgotPwdLink">忘记密码？</a>
+            </div>
+            <button class="action-btn" id="doLoginBtn"><i class="fas fa-arrow-right-to-bracket"></i> 登录账户</button>
+        </div>
+
+        <!-- 注册表单 (初始隐藏) -->
+        <div id="registerForm" class="auth-form hidden-form">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="regUsername" placeholder="用户名 (至少3位)" autocomplete="username">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="regEmail" placeholder="电子邮箱" autocomplete="email">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="regPassword" placeholder="密码 (至少6位)">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-check-circle"></i>
+                <input type="password" id="regConfirmPwd" placeholder="确认密码">
+            </div>
+            <button class="action-btn" id="doRegBtn"><i class="fas fa-user-check"></i> 注册新账号</button>
+        </div>
+    </div>
+
+    <div id="globalMessage" class="message-area">✨ 欢迎体验，数据仅存于本地模拟 ✨</div>
+    <div class="demo-hint">
+        💡 提示: 注册后自动“登录”，关闭页面数据会重置 (前端模拟) <br>
+        <span>📧 测试: demo@example.com / 123456</span>
+    </div>
+</div>
+
+<script>
+    (function(){
+        // ---------- 前端模拟数据库 (localStorage 持久化存储) ----------
+        // 存储key: 'starspace_users'  结构: [{ email, password, username, createdAt }]
+        // 为了真实感，我们使用 localStorage 来模拟后端用户数据
+        
+        // 初始化默认演示账户（如果没有任何用户，就添加一个demo）
+        function initMockDB() {
+            let users = localStorage.getItem('starspace_users');
+            if (!users) {
+                // 预设一个演示用户: email: demo@example.com  password: 123456  username: 星尘旅人
+                const defaultUser = {
+                    email: 'demo@example.com',
+                    password: '123456',     // 实际前端demo中明文存储仅作演示
+                    username: '星尘旅人',
+                    createdAt: new Date().toISOString()
+                };
+                localStorage.setItem('starspace_users', JSON.stringify([defaultUser]));
+            }
+        }
+        
+        // 获取所有用户
+        function getUsers() {
+            const raw = localStorage.getItem('starspace_users');
+            return raw ? JSON.parse(raw) : [];
+        }
+        
+        // 保存用户列表
+        function saveUsers(users) {
+            localStorage.setItem('starspace_users', JSON.stringify(users));
+        }
+        
+        // 辅助: 通过邮箱查找用户
+        function findUserByEmail(email) {
+            const users = getUsers();
+            return users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        }
+        
+        // 注册新用户
+        function registerUser(username, email, password) {
+            const users = getUsers();
+            // 检查邮箱是否已存在
+            if (findUserByEmail(email)) {
+                return { success: false, message: '该邮箱已被注册，请直接登录或使用其他邮箱' };
+            }
+            // 简单校验用户名是否包含非法字符? 只做长度检测
+            if (username.trim().length < 2) {
+                return { success: false, message: '用户名至少需要2个字符' };
+            }
+            // 邮箱基本格式前端已用type=email做了简单校验, 但二次确保
+            if (!email.includes('@') || !email.includes('.')) {
+                return { success: false, message: '请输入有效的电子邮箱地址' };
+            }
+            if (password.length < 6) {
+                return { success: false, message: '密码长度至少为6位' };
+            }
+            // 创建新用户对象
+            const newUser = {
+                email: email.trim().toLowerCase(),
+                password: password,     // 前端demo不加密仅为模拟
+                username: username.trim(),
+                createdAt: new Date().toISOString()
+            };
+            users.push(newUser);
+            saveUsers(users);
+            return { success: true, message: '注册成功！即将自动登录', user: newUser };
+        }
+        
+        // 登录验证
+        function loginUser(email, password) {
+            const user = findUserByEmail(email);
+            if (!user) {
+                return { success: false, message: '该邮箱未注册，请先创建账号' };
+            }
+            if (user.password !== password) {
+                return { success: false, message: '密码错误，请重试' };
+            }
+            return { success: true, message: '登录成功！欢迎回来', user: user };
+        }
+        
+        // 记录当前登录态 (简单模拟 sessionStorage + 可选的remember)
+        let currentLoggedUser = null;   // 内存中存储当前登录用户信息
+        
+        // 检查是否有记住我或者之前会话 (从sessionStorage恢复)
+        function loadSession() {
+            const storedUser = sessionStorage.getItem('starspace_current_user');
+            if (storedUser) {
+                try {
+                    currentLoggedUser = JSON.parse(storedUser);
+                    showTemporaryMessage(`👋 欢迎回来，${currentLoggedUser.username || currentLoggedUser.email}`, 'success');
+                } catch(e) {}
+            }
+            // 如果有localStorage的记住我token? 简化: 若session无但勾选了remember处理在登录时; 但我们再检查localstorage的持久化token（可选增强）
+            const remembered = localStorage.getItem('starspace_remember_token');
+            if (remembered && !currentLoggedUser) {
+                // 尝试根据email恢复，存放格式：email
+                const email = remembered;
+                const users = getUsers();
+                const found = users.find(u => u.email === email);
+                if (found) {
+                    currentLoggedUser = found;
+                    sessionStorage.setItem('starspace_current_user', JSON.stringify(found));
+                    showTemporaryMessage(`✨ 自动登录成功，欢迎 ${found.username || found.email}`, 'success');
+                } else {
+                    localStorage.removeItem('starspace_remember_token');
+                }
+            }
+        }
+        
+        // 显示消息 (支持error, success, info)
+        let msgTimeout = null;
+        function showMessage(text, type = 'info') {
+            const msgDiv = document.getElementById('globalMessage');
+            if (msgTimeout) clearTimeout(msgTimeout);
+            msgDiv.textContent = text;
+            msgDiv.className = 'message-area';
+            if (type === 'success') {
+                msgDiv.classList.add('success');
+            } else if (type === 'error') {
+                msgDiv.classList.add('error');
+            } else {
+                msgDiv.classList.remove('success', 'error');
+            }
+            msgTimeout = setTimeout(() => {
+                if (msgDiv) {
+                    msgDiv.classList.remove('success', 'error');
+                    if (!currentLoggedUser) {
+                        msgDiv.textContent = '✨ 欢迎体验，数据仅存于本地模拟 ✨';
+                    } else {
+                        msgDiv.textContent = `✅ 已登录：${currentLoggedUser.username || currentLoggedUser.email}`;
+                    }
+                }
+            }, 2800);
+        }
+        
+        function showTemporaryMessage(text, type) {
+            showMessage(text, type);
+        }
+        
+        // 执行登录UI交互
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const rememberCheck = document.getElementById('rememberMe').checked;
+            
+            if (!email) {
+                showMessage('请输入电子邮箱', 'error');
+                return;
+            }
+            if (!password) {
+                showMessage('请输入密码', 'error');
+                return;
+            }
+            
+            const result = loginUser(email, password);
+            if (result.success) {
+                // 登录成功记录session
+                currentLoggedUser = result.user;
+                sessionStorage.setItem('starspace_current_user', JSON.stringify(result.user));
+                if (rememberCheck) {
+                    // 记住我: 把邮箱存在localStorage
+                    localStorage.setItem('starspace_remember_token', result.user.email);
+                } else {
+                    localStorage.removeItem('starspace_remember_token');
+                }
+                showMessage(result.message, 'success');
+                // 可选跳转或改变界面显示 (简单演示，更新卡片氛围)
+                updateUIAfterAuth(true);
+                // 清空输入框敏感信息? 不清空也无伤大雅
+            } else {
+                showMessage(result.message, 'error');
+            }
+        }
+        
+        // 注册处理
+        function handleRegister() {
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPwd = document.getElementById('regConfirmPwd').value;
+            
+            if (!username) {
+                showMessage('请填写用户名', 'error');
+                return;
+            }
+            if (!email) {
+                showMessage('请填写电子邮箱', 'error');
+                return;
+            }
+            if (!password) {
+                showMessage('请设置密码', 'error');
+                return;
+            }
+            if (password !== confirmPwd) {
+                showMessage('两次输入的密码不一致', 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showMessage('密码长度至少6位', 'error');
+                return;
+            }
+            
+            const regResult = registerUser(username, email, password);
+            if (regResult.success) {
+                // 注册成功 -> 自动登录该用户
+                const newUser = regResult.user;
+                currentLoggedUser = newUser;
+                sessionStorage.setItem('starspace_current_user', JSON.stringify(newUser));
+                // 注册时默认不勾选记住我，但也不影响体验，清除之前记住我token
+                localStorage.removeItem('starspace_remember_token');
+                showMessage(regResult.message + '，已自动登录', 'success');
+                updateUIAfterAuth(true);
+                // 可选切换到登录选项卡的视图但没必要，直接让登录表单展示当前用户状态？为了体验: 清空注册表单，并且切换到登录选项卡让用户看到登录状态?
+                // 但是更好: 切换选项卡到登录，展示当前已登录? 简单重置选项卡为登录并显示已登录信息
+                setActiveTab('login');
+                // 填充邮箱演示友好? 可自动填充登录邮箱
+                document.getElementById('loginEmail').value = newUser.email;
+                document.getElementById('loginPassword').value = '';
+                // 显示一条欢迎消息
+            } else {
+                showMessage(regResult.message, 'error');
+            }
+        }
+        
+        // 根据登录状态微调界面 (比如禁用某些操作或显示不同，但本例简单)
+        function updateUIAfterAuth(isLoggedIn) {
+            if (isLoggedIn && currentLoggedUser) {
+                // 改变全局消息条样式
+                const msgDiv = document.getElementById('globalMessage');
+                if (!msgDiv.classList.contains('success')) {
+                    msgDiv.textContent = `✅ 已登录：${currentLoggedUser.username || currentLoggedUser.email}`;
+                    msgDiv.classList.add('success');
+                    setTimeout(() => {
+                        if (msgDiv && currentLoggedUser) {
+                            msgDiv.textContent = `✅ 在线：${currentLoggedUser.username || currentLoggedUser.email}`;
+                        }
+                    }, 2000);
+                }
+                // 可以修改按钮文字或增加小logo，但简单演示，不过也可以让登录注册按钮效果不变
+                // 但是为了友好，如果已经登录，再点登录会再次登录别的账户，也是合理的，不做限制。但防止注册时干扰，无妨
+            }
+        }
+        
+        // 切换选项卡 (login / register)
+        function setActiveTab(tab) {
+            const loginFormDiv = document.getElementById('loginForm');
+            const regFormDiv = document.getElementById('registerForm');
+            const loginBtn = document.getElementById('tabLoginBtn');
+            const regBtn = document.getElementById('tabRegBtn');
+            
+            if (tab === 'login') {
+                loginFormDiv.classList.remove('hidden-form');
+                regFormDiv.classList.add('hidden-form');
+                loginBtn.classList.add('active');
+                regBtn.classList.remove('active');
+                // 可选: 清除注册表单的内容提示
+            } else {
+                loginFormDiv.classList.add('hidden-form');
+                regFormDiv.classList.remove('hidden-form');
+                regBtn.classList.add('active');
+                loginBtn.classList.remove('active');
+            }
+        }
+        
+        // 忘记密码模拟提示
+        function handleForgotPwd() {
+            showMessage('✨ 演示模式：请尝试使用 demo@example.com / 123456 登录，或联系管理员重置密码', 'info');
+        }
+        
+        // 重置演示（若已登录 退出登录 隐藏功能: 双击标题重置)
+        function logoutIfNeeded() {
+            if (currentLoggedUser) {
+                if (confirm(`当前登录为 ${currentLoggedUser.email}，是否退出登录？`)) {
+                    currentLoggedUser = null;
+                    sessionStorage.removeItem('starspace_current_user');
+                    localStorage.removeItem('starspace_remember_token');
+                    showMessage('已安全退出登录', 'success');
+                    // 清空登录框
+                    document.getElementById('loginEmail').value = '';
+                    document.getElementById('loginPassword').value = '';
+                    const msgDiv = document.getElementById('globalMessage');
+                    msgDiv.textContent = '✨ 欢迎体验，数据仅存于本地模拟 ✨';
+                    msgDiv.classList.remove('success', 'error');
+                }
+            } else {
+                showMessage('当前无登录会话，可直接注册或登录', 'info');
+            }
+        }
+        
+        // 监听双击品牌图标退出 (小彩蛋)
+        function bindEvents() {
+            const brandIcon = document.querySelector('.brand-icon');
+            if (brandIcon) {
+                brandIcon.addEventListener('dblclick', () => logoutIfNeeded());
+            }
+            document.getElementById('doLoginBtn').addEventListener('click', handleLogin);
+            document.getElementById('doRegBtn').addEventListener('click', handleRegister);
+            document.getElementById('tabLoginBtn').addEventListener('click', () => setActiveTab('login'));
+            document.getElementById('tabRegBtn').addEventListener('click', () => setActiveTab('register'));
+            document.getElementById('forgotPwdLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                handleForgotPwd();
+            });
+            // 支持enter快速登录/注册
+            const loginPwd = document.getElementById('loginPassword');
+            const regConfirm = document.getElementById('regConfirmPwd');
+            loginPwd.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
+            const regPwdField = document.getElementById('regPassword');
+            regConfirm.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleRegister(); });
+            regPwdField.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleRegister(); });
+        }
+        
+        // 初始化数据库，加载会话
+        initMockDB();
+        loadSession();
+        bindEvents();
+        // 如果已登录则调整ui消息
+        if (currentLoggedUser) {
+            updateUIAfterAuth(true);
+        } else {
+            // 展示友好的初始消息
+            setTimeout(() => {
+                const msgDiv = document.getElementById('globalMessage');
+                if (!currentLoggedUser && msgDiv && !msgDiv.textContent.includes('欢迎')) {
+                    msgDiv.textContent = '✨ 欢迎体验，数据仅存于本地模拟 ✨';
+                }
+            }, 100);
+        }
+        
+        // 附加: 如果注册后 自动将当前登录邮箱填充到登录框, 已在注册成功里做了切换填充，无需额外
+        // 完美!
+    })();
+</script>
+</body>
+</html>
