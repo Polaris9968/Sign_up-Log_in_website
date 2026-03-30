@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>主页</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+/* 顶部导航栏 */
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    background: rgba(255,255,255,0.2);
+}
+
+/* 导航按钮 */
+.nav-item {
+    cursor: pointer;
+}
+
+/* 内容区域 */
+.container {
+    padding: 20px;
+}
+
+/* 卡片 */
+.card {
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 导航栏 -->
+<div class="navbar">
+    <div class="nav-item" onclick="showPage('home')">首页</div>
+    <div class="nav-item" onclick="showPage('profile')">个人中心</div>
+    <div class="nav-item" onclick="showPage('settings')">设置</div>
+</div>
+
+<!-- 页面内容 -->
+<div class="container">
+
+    <!-- 首页 -->
+    <div id="homePage">
+        <div class="card">🏠 首页内容</div>
+        <div class="card" id="welcomeText"></div>
+    </div>
+
+    <!-- 个人中心 -->
+    <div id="profilePage" style="display:none;">
+        <div class="card">👤 用户信息</div>
+        <div class="card" id="profileUser"></div>
+    </div>
+
+    <!-- 设置 -->
+    <div id="settingsPage" style="display:none;">
+        <div class="card">⚙️ 设置</div>
+        <div class="card">
+            <button onclick="logout()">退出登录</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// 获取用户
+let user = localStorage.getItem("currentUser");
+
+// 未登录跳回
+if (user === null) {
+    window.location.href = "index.html";
+}
+
+// 显示用户名
+document.getElementById("welcomeText").innerText = "欢迎你，" + user;
+document.getElementById("profileUser").innerText = "用户名：" + user;
+
+// 页面切换函数
+function showPage(page) {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("profilePage").style.display = "none";
+    document.getElementById("settingsPage").style.display = "none";
+
+    if (page === "home") {
+        document.getElementById("homePage").style.display = "block";
+    } else if (page === "profile") {
+        document.getElementById("profilePage").style.display = "block";
+    } else if (page === "settings") {
+        document.getElementById("settingsPage").style.display = "block";
+    }
+}
+
+// 退出登录
+function logout() {
+    localStorage.removeItem("currentUser");
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
